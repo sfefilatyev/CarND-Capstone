@@ -3,7 +3,6 @@ import rospy
 import tf
 import numpy as np
 import time
-import logging
 
 class TLClassifier(object):
     def __init__(self, tl_model_dir, min_detect_score_thresh=0.5):

@@ -1,6 +1,6 @@
 from styx_msgs.msg import TrafficLight
 import rospy
-import tf
+import tensorflow
 import numpy as np
 import time
 
@@ -28,7 +28,7 @@ class TLClassifier(object):
         """
         # implement light color prediction
         with self.detection_graph.as_default():
-            with tf.Session(graph=self.detection_graph) as sess:
+            with tensorflow.Session(graph=self.detection_graph) as sess:
                 image_tensor = self.detection_graph.get_tensor_by_name('image_tensor:0')
                 detect_boxes = self.detection_graph.get_tensor_by_name('detection_boxes:0')
                 detect_scores = self.detection_graph.get_tensor_by_name('detection_scores:0')
@@ -66,13 +66,13 @@ class TLClassifier(object):
 
     def load_graph(self, graph_file):
         """Loads a frozen inference graph"""
-        graph = tf.Graph()
+        graph = tensorflow.Graph()
         with graph.as_default():
-            od_graph_def = tf.GraphDef()
-            with tf.gfile.GFile(graph_file, 'rb') as fid:
+            od_graph_def = tensorflow.GraphDef()
+            with tensorflow.gfile.GFile(graph_file, 'rb') as fid:
                 serialized_graph = fid.read()
                 od_graph_def.ParseFromString(serialized_graph)
-                tf.import_graph_def(od_graph_def, name='')
+                tensorflow.import_graph_def(od_graph_def, name='')
         return graph
 
     def load_image_into_numpy_array(self, image):

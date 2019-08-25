@@ -108,7 +108,12 @@ class TLDetector(object):
             int: index of the closest waypoint in self.waypoints
 
         """
-        closest_idx = self.waypoint_tree.query([x, y], 1)[1]
+        closest_idx = 0
+        if self.waypoint_tree:
+            closest_idx = self.waypoint_tree.query([x, y], 1)[1]
+        else:
+            rospy.logwarn('self.waypoint_tree has not been initialized yet.')
+
         return closest_idx
 
     def get_light_state(self, light):

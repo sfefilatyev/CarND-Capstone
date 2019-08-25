@@ -6,3 +6,5 @@ camera_info:
 stop_line_positions:
     - [8.0, 16.2]
 is_site: True
+tl_model_dir: tl_models/al_ssd_real
+min_detect_tl_score_thresh: 0.5

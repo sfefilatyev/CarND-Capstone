@@ -42,7 +42,7 @@ class TLDetector(object):
         self.upcoming_red_light_pub = rospy.Publisher('/traffic_waypoint', Int32, queue_size=1)
 
         self.bridge = CvBridge()
-        self.light_classifier = TLClassifier()
+        self.light_classifier = TLClassifier(self.config['tl_model_dir'], min_detect_score_thresh=self.config['min_detect_tl_score_thresh'])
         self.listener = tf.TransformListener()
 
         self.state = TrafficLight.UNKNOWN
@@ -121,16 +121,15 @@ class TLDetector(object):
             int: ID of traffic light color (specified in styx_msgs/TrafficLight)
 
         """
-        #if(not self.has_image):
-        #    self.prev_light_loc = None
-        #    return False
 
-        # TODO: do image classication
-        #cv_image = self.bridge.imgmsg_to_cv2(self.camera_image, "bgr8")
+        if (not self.has_image):
+            self.prev_light_loc = None
+            return False
 
-        #Get classification
-        #return self.light_classifier.get_classification(cv_image)
-        return light.state
+        cv_image = self.bridge.imgmsg_to_cv2(self.camera_image, "rgb8")
+
+        #Get TL classification
+        return self.light_classifier.get_classification(cv_image)
 
     def process_traffic_lights(self):
         """Finds closest visible traffic light, if one exists, and determines its

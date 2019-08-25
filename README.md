@@ -1,45 +1,36 @@
-This is the project repo for the final project of the Udacity Self-Driving Car Nanodegree: Programming a Real Self-Driving Car. For more information about the project, see the project introduction [here](https://classroom.udacity.com/nanodegrees/nd013/parts/6047fe34-d93c-4f50-8336-b70ef10cb4b2/modules/e1a23b06-329a-4684-a717-ad476f0d8dff/lessons/462c933d-9f24-42d3-8bdc-a08a5fc866e4/concepts/5ab4b122-83e6-436d-850f-9f4d26627fd9).
 
-Please use **one** of the two installation options, either native **or** docker installation.
+Updated at 1:15PM on Saturday.  Fresh updates will be made in Google Docs and ported over here in batches for efficiency (https://docs.google.com/document/d/10jzkAwM7JccJiGRzyhoEpzobwL02YP0_Dq7CHTU0c38/edit#)
 
-### Native Installation
+### Team Members
+1. Sergiy Feyfilatyev (Github: )
+2. Dmitriy Litvak (Github: )
+3. Devdatta Gangal (Github: )
+4. Reheman Baikejiang (Github: )
 
-* Be sure that your workstation is running Ubuntu 16.04 Xenial Xerus or Ubuntu 14.04 Trusty Tahir. [Ubuntu downloads can be found here](https://www.ubuntu.com/download/desktop).
-* If using a Virtual Machine to install Ubuntu, use the following configuration as minimum:
-  * 2 CPU
-  * 2 GB system memory
-  * 25 GB of free hard drive space
+### Goal
+The rubrik of the Capstone project is quite straightforward - did the car navigate the track successfully? The submitted code must work successfully to navigate Carla around the test track.
 
-  The Udacity provided virtual machine has ROS and Dataspeed DBW already installed, so you can skip the next two steps if you are using this.
+### Results
+1. Carla drives successfully with our code
+Video Insert
+2. Runs successfully on the Highway (Simulator)
+Video insert
+3. Runs successfully on the Test Lot (Simulator)
+Video Insert
 
-* Follow these instructions to install ROS
-  * [ROS Kinetic](http://wiki.ros.org/kinetic/Installation/Ubuntu) if you have Ubuntu 16.04.
-  * [ROS Indigo](http://wiki.ros.org/indigo/Installation/Ubuntu) if you have Ubuntu 14.04.
-* [Dataspeed DBW](https://bitbucket.org/DataspeedInc/dbw_mkz_ros)
-  * Use this option to install the SDK on a workstation that already has ROS installed: [One Line SDK Install (binary)](https://bitbucket.org/DataspeedInc/dbw_mkz_ros/src/81e63fcc335d7b64139d7482017d6a97b405e250/ROS_SETUP.md?fileviewer=file-view-default)
-* Download the [Udacity Simulator](https://github.com/udacity/CarND-Capstone/releases).
 
-### Docker Installation
-[Install Docker](https://docs.docker.com/engine/installation/)
 
-Build the docker container
-```bash
-docker build . -t capstone
-```
+### Installation instructions
 
-Run the docker file
-```bash
-docker run -p 4567:4567 -v $PWD:/capstone -v /tmp/log:/root/.ros/ --rm -it capstone
-```
 
-### Port Forwarding
-To set up port forwarding, please refer to the "uWebSocketIO Starter Guide" found in the classroom (see Extended Kalman Filter Project lesson).
+* Port Forwarding
+We looked up the instructions from [the course (3. Getting Started) here](https://s3-us-west-1.amazonaws.com/udacity-selfdrivingcar/files/Port+Forwarding.pdf) for port forwarding
 
-### Usage
+* Running the code in simulator
 
 1. Clone the project repository
 ```bash
-git clone https://github.com/udacity/CarND-Capstone.git
+git clone https://github.com/sfefilatyev/CarND-Capstone/
 ```
 
 2. Install python dependencies
@@ -56,7 +47,7 @@ roslaunch launch/styx.launch
 ```
 4. Run the simulator
 
-### Real world testing
+* Real world testing (will be updated)
 1. Download [training bag](https://s3-us-west-1.amazonaws.com/udacity-selfdrivingcar/traffic_light_bag_file.zip) that was recorded on the Udacity self-driving car.
 2. Unzip the file
 ```bash
@@ -73,18 +64,20 @@ roslaunch launch/site.launch
 ```
 5. Confirm that traffic light detection works on real life images
 
-### Other library/driver information
-Outside of `requirements.txt`, here is information on other driver/library versions used in the simulator and Carla:
+### Architecture
 
-Specific to these libraries, the simulator grader and Carla use the following:
+<img src="final-project-ros-graph-v2.png" alt="Architecture" width="490" height="338">
 
-|        | Simulator | Carla  |
-| :-----------: |:-------------:| :-----:|
-| Nvidia driver | 384.130 | 384.130 |
-| CUDA | 8.0.61 | 8.0.61 |
-| cuDNN | 6.0.21 | 6.0.21 |
-| TensorRT | N/A | N/A |
-| OpenCV | 3.2.0-dev | 2.4.8 |
-| OpenMP | N/A | N/A |
+We follow the architecture as prescribed in the class instructions. The project runs with [ROS](http://www.ros.org/) and is divided into the following modules :
+ - `tl_detector` uses the camera to detect the traffic lights' color
+ - `twist_controller` handles the control of the car
+ - `waypoint_follower` makes sure the car follow the trajectory
+ - `waypoint_loader` loads the route the car is going to follow
+ - `waypoint_updater` adapts the car's route to the situation (eg. traffic light)
 
-We are working on a fix to line up the OpenCV versions between the two.
+### Insights on what we built
+* Traffic Light detector
+* Twist Controller
+* Waypoint Follower
+* Waypoint Loader
+* Waypoint Updater

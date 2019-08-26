@@ -6,6 +6,7 @@ import time
 import os
 import errno
 from PIL import Image
+import cv2
 
 class TLClassifier(object):
     def __init__(self, tl_model_path, min_detect_score_thresh=0.5):
@@ -23,6 +24,13 @@ class TLClassifier(object):
 
         self.categoty_to_tl_map = {'1': TrafficLight.GREEN, '2': TrafficLight.RED, '3': TrafficLight.YELLOW, '4': TrafficLight.UNKNOWN}
         self.categoty_to_str_map = {'1': 'GREEN', '2': 'RED', '3': 'YELLOW', '4': 'UNKNOWN'}
+        
+        self.sess = tensorflow.Session(graph=self.detection_graph)
+        self.image_tensor = self.detection_graph.get_tensor_by_name('image_tensor:0')
+        self.detect_boxes = self.detection_graph.get_tensor_by_name('detection_boxes:0')
+        self.detect_scores = self.detection_graph.get_tensor_by_name('detection_scores:0')
+        self.detect_classes = self.detection_graph.get_tensor_by_name('detection_classes:0')
+        self.num_detections = self.detection_graph.get_tensor_by_name('num_detections:0')
 
     def get_classification(self, image):
         """Determines the color of the traffic light in the image
@@ -34,34 +42,26 @@ class TLClassifier(object):
             int: ID of traffic light color (specified in styx_msgs/TrafficLight)
 
         """
-        # implement light color prediction
-        with self.detection_graph.as_default():
-            with tensorflow.Session(graph=self.detection_graph) as sess:
-                image_tensor = self.detection_graph.get_tensor_by_name('image_tensor:0')
-                detect_boxes = self.detection_graph.get_tensor_by_name('detection_boxes:0')
-                detect_scores = self.detection_graph.get_tensor_by_name('detection_scores:0')
-                detect_classes = self.detection_graph.get_tensor_by_name('detection_classes:0')
-                num_detections = self.detection_graph.get_tensor_by_name('num_detections:0')
 
-                image_np = self.load_image_into_numpy_array(image)
-                image_expanded = np.expand_dims(image_np, axis=0)
+        image_np = self.load_image_into_numpy_array(image)
+        image_expanded = np.expand_dims(image_np, axis=0)
 
-                t0 = time.time()
-                (boxes, scores, classes, num) = sess.run(
-                    [detect_boxes, detect_scores, detect_classes, num_detections],
-                    feed_dict={image_tensor: image_expanded})
-                t1 = time.time()
+        t0 = time.time()
+        (boxes, scores, classes, num) = self.sess.run(
+            [self.detect_boxes, self.detect_scores, self.detect_classes, self.num_detections],
+            feed_dict={self.image_tensor: image_expanded})
+        t1 = time.time()
 
-                traff_light = TrafficLight.UNKNOWN
-                detect_score = 0
-                tl_col_str = self.categoty_to_str_map['4']
-                if scores is not None and len(scores[0]) > 0:
-                    detect_score = np.squeeze(scores)[0]
-                    if detect_score > self.min_detect_thresh:
-                        # A positive detection happened
-                        cat_idx_str = str(np.squeeze(classes).astype(np.int32)[0])
-                        tl_col_str = self.categoty_to_str_map[cat_idx_str]
-                        traff_light = self.categoty_to_tl_map[cat_idx_str]
+        traff_light = TrafficLight.UNKNOWN
+        detect_score = 0
+        tl_col_str = self.categoty_to_str_map['4']
+        if scores is not None and len(scores[0]) > 0:
+            detect_score = np.squeeze(scores)[0]
+            if detect_score > self.min_detect_thresh:
+                # A positive detection happened
+                cat_idx_str = str(np.squeeze(classes).astype(np.int32)[0])
+                tl_col_str = self.categoty_to_str_map[cat_idx_str]
+                traff_light = self.categoty_to_tl_map[cat_idx_str]
 
                 rospy.logdebug('----------------------')
 

@@ -41,6 +41,9 @@ class TLDetector(object):
         self.waypoints_2d = None
         self.waypoint_tree = None
 
+        rospy.wait_for_message('/current_pose', PoseStamped)
+        rospy.wait_for_message('/base_waypoints', Lane)
+
         sub1 = rospy.Subscriber('/current_pose', PoseStamped, self.pose_cb)
         sub2 = rospy.Subscriber('/base_waypoints', Lane, self.waypoints_cb)
 
@@ -108,12 +111,7 @@ class TLDetector(object):
             int: index of the closest waypoint in self.waypoints
 
         """
-        closest_idx = 0
-        if self.waypoint_tree:
-            closest_idx = self.waypoint_tree.query([x, y], 1)[1]
-        else:
-            rospy.logwarn('self.waypoint_tree has not been initialized yet.')
-
+        closest_idx = self.waypoint_tree.query([x, y], 1)[1]
         return closest_idx
 
     def get_light_state(self, light):

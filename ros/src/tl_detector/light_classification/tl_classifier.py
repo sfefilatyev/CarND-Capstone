@@ -6,12 +6,11 @@ import time
 import os
 import errno
 from PIL import Image
-import cv2
 
 class TLClassifier(object):
     def __init__(self, tl_model_path, min_detect_score_thresh=0.5):
         # load classifier
-        tl_model_file_path = os.getcwd() + '/' + tl_model_path           # os.getcwd() points to tl_detector.py dir where the code exec
+        tl_model_file_path = os.getcwd() + tl_model_path           # os.getcwd() points to tl_detector.py dir where the code exec
         rospy.loginfo('>>> TLClassifier is using model at: %s, min TL detection threshold: %s', tl_model_file_path, str(min_detect_score_thresh))
 
         if not os.path.exists(tl_model_file_path) or not os.path.isfile(tl_model_file_path):

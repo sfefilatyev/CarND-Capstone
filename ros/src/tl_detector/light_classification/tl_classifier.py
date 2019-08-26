@@ -6,7 +6,6 @@ import time
 import os
 import errno
 from PIL import Image
-import cv2
 
 class TLClassifier(object):
     def __init__(self, tl_model_path, min_detect_score_thresh=0.5):

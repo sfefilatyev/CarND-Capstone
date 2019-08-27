@@ -42,15 +42,15 @@ I wish Virtual Workspace had internet access so that instead of uploading files 
 
 ### Issues we ran into
 1. Requirements.txt was modified to point pillow to version 4.3 (see above).  We had an issue with cv.Bridge that was traced back to https://github.com/udacity/CarND-Capstone/issues/147.  This required upgrade to pillow version 4.3
-  1. We do want to call out that while you mention not to change the requirements.txt, you have used different kinds of settings yourself in the Virtual Workspace
-  2. This has caused a lot of confusion and wasted time
+    1. We do want to call out that while you mention not to change the requirements.txt, you have used different kinds of settings yourself in the Virtual Workspace
+    2. This has caused a lot of confusion and wasted time
 2. Need to mention obstacles were envisioned in the beginning with some stub code provided, but never actually finished in the project.
 3. We ran into issues with the car’s deceleration.  We observed crazy jerk after detection of the stop-light.  Seeking inspiration from  https://github.com/justinlee007/CarND-Capstone we adjusted the waypoints to ensure that the velocity was under the maximum possible velocity as given by v2=2aS where a = deceleration and S = distance until the stop-line.
-  1. The maximum deceleration chosen was 0.5m/s2 initially.
-  2. The issue still persisted because the car now had a discrete drop in velocity for the first waypoint where correction needs to happen
-  3. We worked on many different solutions only to realize later that this behavior is consistent with physics.  
-  4. The first thing we changed was to tolerate higher deceleration (now changed to 5m/s2 which is 0.5G significantly less than 2G which is considered hard braking in industry)
-  5. Second thing was to increase the lookahead from 50 waypoints to 100
+    1. The maximum deceleration chosen was 0.5m/s2 initially.
+    2. The issue still persisted because the car now had a discrete drop in velocity for the first waypoint where correction needs to happen
+    3. We worked on many different solutions only to realize later that this behavior is consistent with physics.  
+    4. The first thing we changed was to tolerate higher deceleration (now changed to 5m/s2 which is 0.5G significantly less than 2G which is considered hard braking in industry)
+    5. Second thing was to increase the lookahead from 50 waypoints to 100
 4. We also stumbled upon the “SteeringReport” issue (https://knowledge.udacity.com/questions/46645). The current install of DBW breaks because the steering_wheel_angle_cmd d field, which is populated in bridge.py no longer exists, and we had to change it accordingly inside styx node → the bridge.py (line number 102). The issue is described https://github.com/udacity/CarND-Capstone/issues/306
 
 

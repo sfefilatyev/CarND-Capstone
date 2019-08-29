@@ -1,12 +1,9 @@
-
-Updated at 10:25PM on Monday.  Fresh updates will be made in Google Docs and ported over here in batches for efficiency (https://docs.google.com/document/d/10jzkAwM7JccJiGRzyhoEpzobwL02YP0_Dq7CHTU0c38/edit#)
-
 ### Team Members
-1. Sergiy Feyfilatyev (Github: sfefilatyev)
-2. Dmitriy Litvak (Github: dlitvak)
-3. Devdatta Gangal (Github: devdatta-work)
-4. Reheman Baikejiang (Github: bakijan)
-5. Devunuri Sai Praneeth (Github: )
+1. Sergiy Fefilatyev (Github: [sfefilatyev](https://github.com/sfefilatyev/))
+2. Dmitriy Litvak (Github: [dlitvak](https://github.com/dlitvak/))
+3. Devdatta Gangal (Github: [devdatta-work](https://github.com/devdatta-work/))
+4. Reheman Baikejiang (Github: [bakijan](https://github.com/bakijan/))
+5. Devunuri Sai Praneeth (Github: []](https://github.com/))
 
 ### Goal
 The rubrik of the Capstone project is quite straightforward - did the car navigate the track successfully? The submitted code must work successfully to navigate Carla around the test track.
@@ -22,7 +19,7 @@ Video Insert
 
 
 ### Installation instructions
-* Native Installation
+* VM & Simulator Installation
 1. We use the Udacity provided virtual machine with ROS and Dataspeed DBW already installed - settings at 2CPU, 2GB system memory and 25GB free space
 2. Simulator Downloaded the [Udacity Simulator[(https://github.com/udacity/CarND-Capstone/releases)] on the client machine.  It works best in the "simple" version at 640 x 480
 
@@ -32,7 +29,7 @@ We looked up the instructions from [the course (3. Getting Started) here](https:
 
 * Changes to the Requirements.txt
 While debugging camera topic we stumbled on a the following bug:
-https://github.com/udacity/CarND-Capstone/issues/147 We updated our requirements.txt with Pillow pointing to version 4.3 to address dependencies.
+https://github.com/udacity/CarND-Capstone/issues/147 We locally updated our requirements.txt with Pillow pointing to version 4.3 to address dependencies. This change is not part of the current submission due to strict guidance in this project for dependencies for Carla. However, for all other deployments we suggest to change Pillow library requirement to 4.3.
 
 * Real world testing (will be updated)
 See below
@@ -40,7 +37,7 @@ See below
 * Suggestions
 I wish Virtual Workspace had internet access so that instead of uploading files it would be possible to clone a repo.
 
-### Issues we ran into
+### Other Issues we ran into
 1. Requirements.txt was modified to point pillow to version 4.3 (see above).  We had an issue with cv.Bridge that was traced back to https://github.com/udacity/CarND-Capstone/issues/147.  This required upgrade to pillow version 4.3
 - We do want to call out that while you mention not to change the requirements.txt, you have used different kinds of settings yourself in the Virtual Workspace
 - This has caused a lot of confusion and wasted time
@@ -51,7 +48,7 @@ I wish Virtual Workspace had internet access so that instead of uploading files 
 - We worked on many different solutions only to realize later that this behavior is consistent with physics.  
 - The first thing we changed was to tolerate higher deceleration (now changed to 5m/s2 which is 0.5G significantly less than 2G which is considered hard braking in industry)
 - Second thing was to increase the lookahead from 50 waypoints to 100
-4. We also stumbled upon the “SteeringReport” issue (https://knowledge.udacity.com/questions/46645). The current install of DBW breaks because the steering_wheel_angle_cmd d field, which is populated in bridge.py no longer exists, and we had to change it accordingly inside styx node → the bridge.py (line number 102). The issue is described https://github.com/udacity/CarND-Capstone/issues/306
+4. We also stumbled upon the “SteeringReport” issue (https://knowledge.udacity.com/questions/46645). The current install of DBW breaks because the steering_wheel_angle_cmd d field, which is populated in bridge.py no longer exists, and we had to update locally code in Bridge-node to address issue described in udacity/CarND-Capstone#296. This results in field steering_wheel_angle_cmd changed to steering_wheel_angle inside SteeringReport structure.
 
 
 ### Architecture

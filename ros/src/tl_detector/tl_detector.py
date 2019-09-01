@@ -7,6 +7,7 @@ from styx_msgs.msg import Lane
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 from light_classification.tl_classifier import TLClassifier
+from message_filters import ApproximateTimeSynchronizer, Subscriber
 from scipy.spatial import KDTree
 import tf
 import cv2
@@ -22,6 +23,7 @@ class TLDetector(object):
         self.waypoints = None
         self.camera_image = None
         self.lights = []
+        self.has_image = False
 
         config_string = rospy.get_param("/traffic_light_config")
         self.config = yaml.load(config_string)
@@ -59,7 +61,7 @@ class TLDetector(object):
 
         detector_rate = rospy.Rate(self.config['tl_detector_rate'])
         while not rospy.is_shutdown():
-            if self.waypoint_tree:
+            if self.waypoint_tree is not None:
                 self.find_traffic_lights()
             detector_rate.sleep()
 

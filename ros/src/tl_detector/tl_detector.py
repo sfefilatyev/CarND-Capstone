@@ -7,6 +7,7 @@ from styx_msgs.msg import Lane
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 from light_classification.tl_classifier import TLClassifier
+from message_filters import ApproximateTimeSynchronizer, Subscriber
 from scipy.spatial import KDTree
 import tf
 import cv2
@@ -22,6 +23,7 @@ class TLDetector(object):
         self.waypoints = None
         self.camera_image = None
         self.lights = []
+        self.has_image = False
 
         config_string = rospy.get_param("/traffic_light_config")
         self.config = yaml.load(config_string)
@@ -57,7 +59,11 @@ class TLDetector(object):
         sub3 = rospy.Subscriber('/vehicle/traffic_lights', TrafficLightArray, self.traffic_cb)
         sub6 = rospy.Subscriber('/image_color', Image, self.image_cb, queue_size=1)
 
-        rospy.spin()
+        detector_rate = rospy.Rate(self.config['tl_detector_rate'])
+        while not rospy.is_shutdown():
+            if self.waypoint_tree is not None:
+                self.find_traffic_lights()
+            detector_rate.sleep()
 
     def pose_cb(self, msg):
         self.pose = msg
@@ -81,6 +87,8 @@ class TLDetector(object):
         """
         self.has_image = True
         self.camera_image = msg
+
+    def find_traffic_lights(self):
         light_wp, state = self.process_traffic_lights()
 
         '''
@@ -173,5 +181,5 @@ class TLDetector(object):
 if __name__ == '__main__':
     try:
         TLDetector()
-    except (rospy.ROSInterruptException, FileNotFoundError) as e:
+    except rospy.ROSInterruptException:
         rospy.logerr('Could not start traffic node.')

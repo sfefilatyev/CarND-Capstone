@@ -62,13 +62,13 @@ class TLClassifier(object):
                 tl_col_str = self.categoty_to_str_map[cat_idx_str]
                 traff_light = self.categoty_to_tl_map[cat_idx_str]
 
-                rospy.logdebug('----------------------')
+        rospy.logdebug('----------------------')
 
-                rospy.loginfo('TLClassifier detected %s (score %s) light after %d msec', tl_col_str, str(detect_score), (t1 - t0) * 1000)
+        rospy.loginfo('TLClassifier detected %s (score %s) light after %d msec', tl_col_str, str(detect_score), (t1 - t0) * 1000)
 
-                rospy.logdebug('TLClassifier SCORES %s', str(scores[0]))
-                rospy.logdebug('TLClassifier CLASSES %s', str(classes[0]))
-                rospy.logdebug('----------------------')
+        rospy.logdebug('TLClassifier SCORES %s', str(scores[0]))
+        rospy.logdebug('TLClassifier CLASSES %s', str(classes[0]))
+        rospy.logdebug('----------------------')
 
         return traff_light
 

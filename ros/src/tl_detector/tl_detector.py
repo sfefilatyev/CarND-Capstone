@@ -164,13 +164,8 @@ class TLDetector(object):
             return False
 
         cv_image = self.bridge.imgmsg_to_cv2(self.camera_image, "rgb8")
-        scale_percent = 50 # percent of original size
-        width = int(cv_image.shape[1] * scale_percent / 100.0)
-        height = int(cv_image.shape[0] * scale_percent / 100.0)
-        dim = (width, height) 
-        resize = cv2.resize(cv_image, dim, interpolation = cv2.INTER_AREA) 
         #Get TL classification
-        return self.light_classifier.get_classification(resize)
+        return self.light_classifier.get_classification(cv_image)
 
     def distance(self, waypoints, wp1, wp2):
         dist = 0

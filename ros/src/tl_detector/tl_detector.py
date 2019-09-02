@@ -9,7 +9,7 @@ from cv_bridge import CvBridge
 from light_classification.tl_classifier import TLClassifier
 from message_filters import ApproximateTimeSynchronizer, Subscriber
 from scipy.spatial import KDTree
-import tf
+#import tf
 import cv2
 import yaml
 
@@ -32,7 +32,7 @@ class TLDetector(object):
 
         self.bridge = CvBridge()
         self.light_classifier = TLClassifier(self.config['tl_model_path'], min_detect_score_thresh=self.config['min_detect_tl_score_thresh'])
-        self.listener = tf.TransformListener()
+        #self.listener = tf.TransformListener()
 
         self.state = TrafficLight.UNKNOWN
         self.last_state = TrafficLight.UNKNOWN
@@ -46,7 +46,8 @@ class TLDetector(object):
         rospy.wait_for_message('/current_pose', PoseStamped)
         rospy.wait_for_message('/base_waypoints', Lane)
 
-        sub1 = rospy.Subscriber('/current_pose', PoseStamped, self.pose_cb)
+        #sub1 = rospy.Subscriber('/current_pose', PoseStamped, self.pose_cb)
+        sub1 = Subscriber('/current_pose', PoseStamped)
         sub2 = rospy.Subscriber('/base_waypoints', Lane, self.waypoints_cb)
 
         '''
@@ -56,14 +57,26 @@ class TLDetector(object):
         simulator. When testing on the vehicle, the color state will not be available. You'll need to
         rely on the position of the light and the camera image to predict it.
         '''
-        sub3 = rospy.Subscriber('/vehicle/traffic_lights', TrafficLightArray, self.traffic_cb)
-        sub6 = rospy.Subscriber('/image_color', Image, self.image_cb, queue_size=1)
+        #sub3 = rospy.Subscriber('/vehicle/traffic_lights', TrafficLightArray, self.traffic_cb)
+        sub3 = Subscriber('/vehicle/traffic_lights', TrafficLightArray)
+        #sub6 = rospy.Subscriber('/image_color', Image, self.image_cb, queue_size=1)
+        sub6 = Subscriber('/image_color', Image)
+        
+        self.tss = ApproximateTimeSynchronizer([sub1, sub3, sub6], queue_size=1, slop=0.1) 
+        self.tss.registerCallback(self.pose_tl_image_cb)
 
         detector_rate = rospy.Rate(self.config['tl_detector_rate'])
-        while not rospy.is_shutdown():
-            if self.waypoint_tree is not None:
-                self.find_traffic_lights()
-            detector_rate.sleep()
+#        while not rospy.is_shutdown():
+#            if self.waypoint_tree is not None:
+#                self.find_traffic_lights()
+#            detector_rate.sleep()
+        rospy.spin()
+
+    def pose_tl_image_cb(self, pose_msg, lights_msg, image_msg):
+	self.pose_cb(pose_msg)
+	self.traffic_cb(lights_msg)
+	self.image_cb(image_msg)
+	self.find_traffic_lights()
 
     def pose_cb(self, msg):
         self.pose = msg
@@ -138,9 +151,13 @@ class TLDetector(object):
             return False
 
         cv_image = self.bridge.imgmsg_to_cv2(self.camera_image, "rgb8")
-
+        scale_percent = 50 # percent of original size
+        width = int(cv_image.shape[1] * scale_percent / 100.0)
+        height = int(cv_image.shape[0] * scale_percent / 100.0)
+        dim = (width, height) 
+        resize = cv2.resize(cv_image, dim, interpolation = cv2.INTER_AREA) 
         #Get TL classification
-        return self.light_classifier.get_classification(cv_image)
+        return self.light_classifier.get_classification(resize)
 
     def process_traffic_lights(self):
         """Finds closest visible traffic light, if one exists, and determines its

@@ -154,6 +154,10 @@ class TLDetector(object):
             int: ID of traffic light color (specified in styx_msgs/TrafficLight)
 
         """
+        # If yaml is configured to run TL detection from topic, return the TL state from topic
+        if self.tl_detection_from_topic:
+            rospy.loginfo("Light state read from topic: %s", light.state)
+            return light.state
 
         if (not self.has_image):
             self.prev_light_loc = None
@@ -210,11 +214,6 @@ class TLDetector(object):
                     closest_light_distance = self.distance(self.waypoints.waypoints, car_wp_idx, line_wp_idx)
 
         if closest_light:
-            # If yaml is configured to run TL detection from topic, return the TL state from topic
-            if self.tl_detection_from_topic:
-                rospy.loginfo("Light state read from topic: %s", closest_light.state)
-                return line_wp_idx, closest_light.state
-
             if closest_light_distance >= 0 and closest_light_distance < self.tl_start_detection_distance:
                 state = self.get_light_state(closest_light)
                 return line_wp_idx, state

@@ -61,7 +61,7 @@ class Bridge(object):
     def create_light(self, x, y, z, yaw, state):
         light = TrafficLight()
 
-        light.header = Header()
+        #light.header = Header()
         light.header.stamp = rospy.Time.now()
         light.header.frame_id = '/world'
 
@@ -73,7 +73,7 @@ class Bridge(object):
     def create_pose(self, x, y, z, yaw=0.):
         pose = PoseStamped()
 
-        pose.header = Header()
+        #pose.header = Header()
         pose.header.stamp = rospy.Time.now()
         pose.header.frame_id = '/world'
 
@@ -114,7 +114,7 @@ class Bridge(object):
         return angular_vel
 
     def create_point_cloud_message(self, pts):
-        header = Header()
+        #header = Header()
         header.stamp = rospy.Time.now()
         header.frame_id = '/world'
         cloud_message = pcl2.create_cloud_xyz32(header, pts)
@@ -166,7 +166,7 @@ class Bridge(object):
         status = data['light_state']
 
         lights = TrafficLightArray()
-        #header = Header()
+        #lights.header = Header()
         lights.header.stamp = rospy.Time.now()
         lights.header.frame_id = '/world'
         lights.lights = [self.create_light(*e) for e in zip(x, y, z, yaw, status)]
@@ -182,7 +182,8 @@ class Bridge(object):
         image_array = np.asarray(image)
 
         image_message = self.bridge.cv2_to_imgmsg(image_array, encoding="rgb8")
-	image_message.header.stamp = now
+        #image_message.header = Header()
+        image_message.header.stamp = now
         self.publishers['image'].publish(image_message)
 
     def callback_steering(self, data):

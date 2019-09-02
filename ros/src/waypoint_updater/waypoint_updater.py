@@ -25,14 +25,15 @@ TODO (for Yousuf and Aaron): Stopline location for each traffic light.
 
 LOOKAHEAD_WPS = 50 # Number of waypoints we will publish. You can change this number
 MAX_DECEL = 5.0 # Changing to 5.0 to allow for 5m/s2 deceleration
+WAYPOINT_PUBLISH_RATE = 1
 
 
 class WaypointUpdater(object):
     def __init__(self):
         rospy.init_node('waypoint_updater')
 
-        rospy.Subscriber('/current_pose', PoseStamped, self.pose_cb)
-        rospy.Subscriber('/base_waypoints', Lane, self.waypoints_cb)
+        self.current_pose_sub = rospy.Subscriber('/current_pose', PoseStamped, self.pose_cb)
+        self.base_waypooint_sub = rospy.Subscriber('/base_waypoints', Lane, self.waypoints_cb)
 
         # TODO: Add a subscriber for /traffic_waypoint and /obstacle_waypoint below
         
@@ -47,7 +48,7 @@ class WaypointUpdater(object):
         self.loop()
 
     def loop(self):
-        rate = rospy.Rate(10)
+        rate = rospy.Rate(WAYPOINT_PUBLISH_RATE)
         while not rospy.is_shutdown():
             if self.pose and self.waypoint_tree is not None:
                 # Get closest waypoint
@@ -122,6 +123,11 @@ class WaypointUpdater(object):
         if not self.waypoints_2d:
             self.waypoints_2d = [[waypoint.pose.pose.position.x, waypoint.pose.pose.position.y] for waypoint in waypoints.waypoints]
             self.waypoint_tree = KDTree(self.waypoints_2d)
+        
+        # Unsubscribe as we do not need the base waypoints anymore
+        self.base_waypooint_sub.unregister()
+
+        rospy.loginfo("Base waypoints data processed, unsubscribed from /base_waypoints")
 
     def traffic_cb(self, msg):
         # TODO: Callback for /traffic_waypoint message. Implement 

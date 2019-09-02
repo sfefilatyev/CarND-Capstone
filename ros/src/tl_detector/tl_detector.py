@@ -12,6 +12,7 @@ from scipy.spatial import KDTree
 #import tf
 import cv2
 import yaml
+import math
 
 STATE_COUNT_THRESHOLD = 3
 
@@ -48,7 +49,7 @@ class TLDetector(object):
 
         #sub1 = rospy.Subscriber('/current_pose', PoseStamped, self.pose_cb)
         sub1 = Subscriber('/current_pose', PoseStamped)
-        sub2 = rospy.Subscriber('/base_waypoints', Lane, self.waypoints_cb)
+        self.base_waypoints_sub = rospy.Subscriber('/base_waypoints', Lane, self.waypoints_cb)
 
         '''
         /vehicle/traffic_lights provides you with the location of the traffic light in 3D map space and
@@ -62,7 +63,7 @@ class TLDetector(object):
         #sub6 = rospy.Subscriber('/image_color', Image, self.image_cb, queue_size=1)
         sub6 = Subscriber('/image_color', Image)
         
-        self.tss = ApproximateTimeSynchronizer([sub1, sub3, sub6], queue_size=1, slop=0.1) 
+        self.tss = ApproximateTimeSynchronizer([sub1, sub3, sub6], queue_size=20, slop=0.1) 
         self.tss.registerCallback(self.pose_tl_image_cb)
 
         detector_rate = rospy.Rate(self.config['tl_detector_rate'])
@@ -73,10 +74,11 @@ class TLDetector(object):
         rospy.spin()
 
     def pose_tl_image_cb(self, pose_msg, lights_msg, image_msg):
-	self.pose_cb(pose_msg)
-	self.traffic_cb(lights_msg)
-	self.image_cb(image_msg)
-	self.find_traffic_lights()
+       if self.waypoint_tree is not None:
+          self.pose_cb(pose_msg)
+          self.traffic_cb(lights_msg)
+          self.image_cb(image_msg)
+          self.find_traffic_lights()
 
     def pose_cb(self, msg):
         self.pose = msg
@@ -86,7 +88,10 @@ class TLDetector(object):
         if not self.waypoints_2d:
             self.waypoints_2d = [[waypoint.pose.pose.position.x, waypoint.pose.pose.position.y] for waypoint in waypoints.waypoints]
             self.waypoint_tree = KDTree(self.waypoints_2d)
-
+        
+        # Unsubscribe from base waypoints as not needed anymore
+        self.base_waypoints_sub.unregister()
+       
     def traffic_cb(self, msg):
         self.lights = msg.lights
 
@@ -159,6 +164,14 @@ class TLDetector(object):
         #Get TL classification
         return self.light_classifier.get_classification(resize)
 
+    def distance(self, waypoints, wp1, wp2):
+        dist = 0
+        dl = lambda a, b: math.sqrt((a.x-b.x)**2 + (a.y-b.y)**2  + (a.z-b.z)**2)
+        for i in range(wp1, wp2+1):
+            dist += dl(waypoints[wp1].pose.pose.position, waypoints[i].pose.pose.position)
+            wp1 = i
+        return dist
+
     def process_traffic_lights(self):
         """Finds closest visible traffic light, if one exists, and determines its
             location and color
@@ -170,6 +183,7 @@ class TLDetector(object):
         """
         closest_light = None
         line_wp_idx = None
+        closest_distance = 1000 # distance to a traffic light in unit of waypoints
 
         # List of positions that correspond to the line to stop in front of for a given intersection
         stop_line_positions = self.config['stop_line_positions']
@@ -184,14 +198,19 @@ class TLDetector(object):
                 temp_wp_idx = self.get_closest_waypoint(line[0], line[1])
                 # Find closest stop line waypoint index
                 d = temp_wp_idx - car_wp_idx
+
                 if d>= 0 and d < diff:
-                    diff = d 
+                    diff = d
                     closest_light = light
                     line_wp_idx = temp_wp_idx
+                    distance = self.distance(self.waypoints.waypoints, car_wp_idx, line_wp_idx)
 
         if closest_light:
-            state = self.get_light_state(closest_light)
-            return line_wp_idx, state
+            if distance >= 0 and distance < 100:
+                state = self.get_light_state(closest_light)
+                return line_wp_idx, state
+            else:
+                print("Distance to the next stop line is {}".format(distance))
 
         return -1, TrafficLight.UNKNOWN
 

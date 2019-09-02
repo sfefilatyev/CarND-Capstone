@@ -25,7 +25,7 @@ TODO (for Yousuf and Aaron): Stopline location for each traffic light.
 
 LOOKAHEAD_WPS = 50 # Number of waypoints we will publish. You can change this number
 MAX_DECEL = 5.0 # Changing to 5.0 to allow for 5m/s2 deceleration
-WAYPOINT_PUBLISH_RATE = 1
+WAYPOINT_PUBLISH_RATE = 20
 
 
 class WaypointUpdater(object):

@@ -36,6 +36,9 @@ class TLDetector(object):
         self.tl_start_detection_distance = float(self.config['tl_start_detection_distance']) if self.config['tl_detection_from_topic'] else 100
         self.tl_detection_from_topic = self.config['tl_detection_from_topic']
 
+        rospy.loginfo('>>> TLDetector is set with: tl_start_detection_distance %s, tl_detection_from_topic: %s',
+                      self.tl_start_detection_distance,  str(self.tl_detection_from_topic))
+
         self.state = TrafficLight.UNKNOWN
         self.last_state = TrafficLight.UNKNOWN
         self.last_wp = -1
@@ -209,6 +212,7 @@ class TLDetector(object):
         if closest_light:
             # If yaml is configured to run TL detection from topic, return the TL state from topic
             if self.tl_detection_from_topic:
+                rospy.loginfo("Light state read from topic: %s", closest_light.state)
                 return line_wp_idx, closest_light.state
 
             if closest_light_distance >= 0 and closest_light_distance < self.tl_start_detection_distance:

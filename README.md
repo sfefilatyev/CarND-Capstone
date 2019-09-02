@@ -3,7 +3,7 @@
 2. Dmitriy Litvak (Github: [dlitvak](https://github.com/dlitvak/))
 3. Devdatta Gangal (Github: [devdatta-work](https://github.com/devdatta-work/))
 4. Reheman Baikejiang (Github: [bakijan](https://github.com/bakijan/))
-5. Devunuri Sai Praneeth (Github: []](https://github.com/))
+5. Devunuri Sai Praneeth (Github: [saipraneethd](https://github.com/saipraneethd))
 
 ### Goal
 The rubrik of the Capstone project is quite straightforward - did the car navigate the track successfully? The submitted code must work successfully to navigate Carla around the test track.

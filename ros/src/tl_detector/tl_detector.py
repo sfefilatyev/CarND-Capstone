@@ -33,7 +33,8 @@ class TLDetector(object):
 
         self.bridge = CvBridge()
         self.light_classifier = TLClassifier(self.config['tl_model_path'], min_detect_score_thresh=self.config['min_detect_tl_score_thresh'])
-        #self.listener = tf.TransformListener()
+        self.tl_start_detection_distance = float(self.config['tl_start_detection_distance']) if self.config['tl_detection_from_topic'] else 100
+        self.tl_detection_from_topic = self.config['tl_detection_from_topic']
 
         self.state = TrafficLight.UNKNOWN
         self.last_state = TrafficLight.UNKNOWN
@@ -183,7 +184,7 @@ class TLDetector(object):
         """
         closest_light = None
         line_wp_idx = None
-        closest_distance = 1000 # distance to a traffic light in unit of waypoints
+        closest_light_distance = 1000 # distance to a traffic light in unit of waypoints
 
         # List of positions that correspond to the line to stop in front of for a given intersection
         stop_line_positions = self.config['stop_line_positions']
@@ -203,14 +204,18 @@ class TLDetector(object):
                     diff = d
                     closest_light = light
                     line_wp_idx = temp_wp_idx
-                    distance = self.distance(self.waypoints.waypoints, car_wp_idx, line_wp_idx)
+                    closest_light_distance = self.distance(self.waypoints.waypoints, car_wp_idx, line_wp_idx)
 
         if closest_light:
-            if distance >= 0 and distance < 100:
+            # If yaml is configured to run TL detection from topic, return the TL state from topic
+            if self.tl_detection_from_topic:
+                return line_wp_idx, closest_light.state
+
+            if closest_light_distance >= 0 and closest_light_distance < self.tl_start_detection_distance:
                 state = self.get_light_state(closest_light)
                 return line_wp_idx, state
             else:
-                print("Distance to the next stop line is {}".format(distance))
+                rospy.logdebug("Distance to the next stop line is {}".format(closest_light_distance))
 
         return -1, TrafficLight.UNKNOWN
 

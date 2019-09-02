@@ -8,4 +8,5 @@ stop_line_positions:
 is_site: True
 tl_model_path: /light_classification/tl_models/al_ssd_real/frozen_inference_graph.pb
 tl_detector_rate: 2
+tl_start_detection_distance: 100
 min_detect_tl_score_thresh: 0.5

@@ -9,7 +9,6 @@ from cv_bridge import CvBridge
 from light_classification.tl_classifier import TLClassifier
 from message_filters import ApproximateTimeSynchronizer, Subscriber
 from scipy.spatial import KDTree
-#import tf
 import cv2
 import yaml
 import math
@@ -79,11 +78,11 @@ class TLDetector(object):
         rospy.spin()
 
     def pose_tl_image_cb(self, pose_msg, lights_msg, image_msg):
-       if self.waypoint_tree is not None:
-          self.pose_cb(pose_msg)
-          self.traffic_cb(lights_msg)
-          self.image_cb(image_msg)
-          self.find_traffic_lights()
+        if self.waypoint_tree is not None:
+            self.pose_cb(pose_msg)
+            self.traffic_cb(lights_msg)
+            self.image_cb(image_msg)
+            self.find_traffic_lights()
 
     def pose_cb(self, msg):
         self.pose = msg
@@ -214,7 +213,7 @@ class TLDetector(object):
                 state = self.get_light_state(closest_light)
                 return line_wp_idx, state
             else:
-                rospy.logdebug("Distance to the next stop line is {}".format(closest_light_distance))
+                rospy.logdebug("Distance to the next stop line is {} meters".format(closest_light_distance))
 
         return -1, TrafficLight.UNKNOWN
 

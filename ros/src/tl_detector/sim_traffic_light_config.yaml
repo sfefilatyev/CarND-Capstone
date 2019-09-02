@@ -11,6 +11,8 @@ stop_line_positions:
     - [161.76, 2303.82]
     - [351.84, 1574.65]
 is_site: False
+tl_detection_from_topic: False
 tl_model_path: /light_classification/tl_models/al_ssd_sim/frozen_inference_graph.pb
 tl_detector_rate: 2
+tl_start_detection_distance: 100
 min_detect_tl_score_thresh: 0.5

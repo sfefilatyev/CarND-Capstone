@@ -33,7 +33,12 @@ class TLDetector(object):
 
         self.bridge = CvBridge()
         self.light_classifier = TLClassifier(self.config['tl_model_path'], min_detect_score_thresh=self.config['min_detect_tl_score_thresh'])
-        #self.listener = tf.TransformListener()
+        self.tl_start_detection_distance = self.config.get('tl_start_detection_distance', 100.0)
+        self.tl_start_detection_distance = float(self.tl_start_detection_distance)
+        self.tl_detection_from_topic = self.config.get('tl_detection_from_topic', True)
+
+        rospy.loginfo('>>> TLDetector is set with: tl_start_detection_distance %s, tl_detection_from_topic: %s',
+                      self.tl_start_detection_distance,  str(self.tl_detection_from_topic))
 
         self.state = TrafficLight.UNKNOWN
         self.last_state = TrafficLight.UNKNOWN
@@ -150,19 +155,18 @@ class TLDetector(object):
             int: ID of traffic light color (specified in styx_msgs/TrafficLight)
 
         """
+        # If yaml is configured to run TL detection from topic, return the TL state from topic
+        if self.tl_detection_from_topic:
+            rospy.logdebug("Light state read from topic: %s", light.state)
+            return light.state
 
         if (not self.has_image):
             self.prev_light_loc = None
             return False
 
         cv_image = self.bridge.imgmsg_to_cv2(self.camera_image, "rgb8")
-        scale_percent = 50 # percent of original size
-        width = int(cv_image.shape[1] * scale_percent / 100.0)
-        height = int(cv_image.shape[0] * scale_percent / 100.0)
-        dim = (width, height) 
-        resize = cv2.resize(cv_image, dim, interpolation = cv2.INTER_AREA) 
         #Get TL classification
-        return self.light_classifier.get_classification(resize)
+        return self.light_classifier.get_classification(cv_image)
 
     def distance(self, waypoints, wp1, wp2):
         dist = 0
@@ -183,7 +187,7 @@ class TLDetector(object):
         """
         closest_light = None
         line_wp_idx = None
-        closest_distance = 1000 # distance to a traffic light in unit of waypoints
+        closest_light_distance = 1000 # distance to a traffic light in unit of waypoints
 
         # List of positions that correspond to the line to stop in front of for a given intersection
         stop_line_positions = self.config['stop_line_positions']
@@ -203,14 +207,14 @@ class TLDetector(object):
                     diff = d
                     closest_light = light
                     line_wp_idx = temp_wp_idx
-                    distance = self.distance(self.waypoints.waypoints, car_wp_idx, line_wp_idx)
+                    closest_light_distance = self.distance(self.waypoints.waypoints, car_wp_idx, line_wp_idx)
 
         if closest_light:
-            if distance >= 0 and distance < 100:
+            if closest_light_distance >= 0 and closest_light_distance < self.tl_start_detection_distance:
                 state = self.get_light_state(closest_light)
                 return line_wp_idx, state
             else:
-                print("Distance to the next stop line is {}".format(distance))
+                rospy.logdebug("Distance to the next stop line is {}".format(closest_light_distance))
 
         return -1, TrafficLight.UNKNOWN
 

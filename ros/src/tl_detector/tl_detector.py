@@ -156,7 +156,7 @@ class TLDetector(object):
         """
         # If yaml is configured to run TL detection from topic, return the TL state from topic
         if self.tl_detection_from_topic:
-            rospy.loginfo("Light state read from topic: %s", light.state)
+            rospy.logdebug("Light state read from topic: %s", light.state)
             return light.state
 
         if (not self.has_image):

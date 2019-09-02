@@ -33,8 +33,9 @@ class TLDetector(object):
 
         self.bridge = CvBridge()
         self.light_classifier = TLClassifier(self.config['tl_model_path'], min_detect_score_thresh=self.config['min_detect_tl_score_thresh'])
-        self.tl_start_detection_distance = float(self.config['tl_start_detection_distance']) if self.config['tl_detection_from_topic'] else 100
-        self.tl_detection_from_topic = self.config['tl_detection_from_topic']
+        self.tl_start_detection_distance = self.config.get('tl_start_detection_distance', 100.0)
+        self.tl_start_detection_distance = float(self.tl_start_detection_distance)
+        self.tl_detection_from_topic = self.config.get('tl_detection_from_topic', True)
 
         rospy.loginfo('>>> TLDetector is set with: tl_start_detection_distance %s, tl_detection_from_topic: %s',
                       self.tl_start_detection_distance,  str(self.tl_detection_from_topic))

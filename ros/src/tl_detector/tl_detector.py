@@ -51,8 +51,7 @@ class TLDetector(object):
         rospy.wait_for_message('/current_pose', PoseStamped)
         rospy.wait_for_message('/base_waypoints', Lane)
 
-        #sub1 = rospy.Subscriber('/current_pose', PoseStamped, self.pose_cb)
-        sub1 = Subscriber('/current_pose', PoseStamped)
+        sub1 = rospy.Subscriber('/current_pose', PoseStamped, self.pose_cb)
         self.base_waypoints_sub = rospy.Subscriber('/base_waypoints', Lane, self.waypoints_cb)
 
         '''
@@ -62,27 +61,14 @@ class TLDetector(object):
         simulator. When testing on the vehicle, the color state will not be available. You'll need to
         rely on the position of the light and the camera image to predict it.
         '''
-        #sub3 = rospy.Subscriber('/vehicle/traffic_lights', TrafficLightArray, self.traffic_cb)
-        sub3 = Subscriber('/vehicle/traffic_lights', TrafficLightArray)
-        #sub6 = rospy.Subscriber('/image_color', Image, self.image_cb, queue_size=1)
-        sub6 = Subscriber('/image_color', Image)
-        
-        self.tss = ApproximateTimeSynchronizer([sub1, sub3, sub6], queue_size=20, slop=0.1) 
-        self.tss.registerCallback(self.pose_tl_image_cb)
+        sub2 = rospy.Subscriber('/vehicle/traffic_lights', TrafficLightArray, self.traffic_cb)
+        sub3 = rospy.Subscriber('/image_color', Image, self.image_cb, queue_size=1)
 
         detector_rate = rospy.Rate(self.config['tl_detector_rate'])
-#        while not rospy.is_shutdown():
-#            if self.waypoint_tree is not None:
-#                self.find_traffic_lights()
-#            detector_rate.sleep()
-        rospy.spin()
-
-    def pose_tl_image_cb(self, pose_msg, lights_msg, image_msg):
-        if self.waypoint_tree is not None:
-            self.pose_cb(pose_msg)
-            self.traffic_cb(lights_msg)
-            self.image_cb(image_msg)
-            self.find_traffic_lights()
+        while not rospy.is_shutdown():
+            if self.waypoint_tree is not None:
+                self.find_traffic_lights()
+            detector_rate.sleep()
 
     def pose_cb(self, msg):
         self.pose = msg
@@ -189,11 +175,10 @@ class TLDetector(object):
         closest_light_distance = 1000 # distance to a traffic light in unit of waypoints
 
         # List of positions that correspond to the line to stop in front of for a given intersection
-        stop_line_positions = self.config['stop_line_positions']
+        stop_line_positions = self.config.get('stop_line_positions',[])
         if(self.pose):
             car_wp_idx = self.get_closest_waypoint(self.pose.pose.position.x, self.pose.pose.position.y)
 
-            #TODO find the closest visible traffic light (if one exists)
             diff = len(self.waypoints.waypoints)
             for i, light in enumerate(self.lights):
                 # Get stop line waypoint index

@@ -3,7 +3,7 @@
 <img src="udacity_selfdriving.jpg" alt="Udacity Self Driving Car" width="640" height="480">
 
 ### Team Members
-1. Sergiy Fefilatyev (Github: [sfefilatyev](https://github.com/sfefilatyev/))
+1. Sergiy Fefilatyev - Team Lead (Github: [sfefilatyev](https://github.com/sfefilatyev/))
 2. Dmitriy Litvak (Github: [dlitvak](https://github.com/dlitvak/))
 3. Devdatta Gangal (Github: [devdatta-work](https://github.com/devdatta-work/))
 4. Reheman Baikejiang (Github: [bakijan](https://github.com/bakijan/))

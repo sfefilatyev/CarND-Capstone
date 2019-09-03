@@ -52,8 +52,12 @@ the mobilenet as the next best model.
 ![model zoo stats](imgs/model_zoo_stats.jpg)
 
 The Speed column is the duration of inference on the researcher's GPU.  _mAP_ refers to the accuracy of the inference.
-So, while *ssd_mobilenet_v1_coco* model lost 12.5% in accuracy, it gained 29% in speed.  
+So, while *ssd_mobilenet_v1_coco* model lost 12.5% in accuracy compared to *ssd_inception_v2_coco*, it gained 29% in speed.  
 
 As the model we adopted from the other group seemed to have plenty of accuracy, we set out to train the mobilenet model for 20K
 steps.  Unfortunately, after training for many hours in Udacity workspace, we found that the accuracy on the test set was too low.
+While some images were classified correctly, other were missed or completely misclassified.
 
+![Misclassified by mobilenet](imgs/TL_misclassified_mobilenet.jpg)
+
+Running out of time we settled on using Alex Lechner group's model.  You can find our own exploits training mobilenet at our [repo](https://github.com/dlitvak/TL_Classifier)

@@ -5,7 +5,7 @@
 ### Team Members
 1. Sergiy Fefilatyev - Team Lead ([Email](mailto:sfefilatyev@gmail.com), Github: [sfefilatyev](https://github.com/sfefilatyev/)).
 2. Dmitriy Litvak ([Email](mailto:dmit.litvak@gmail.com), Github: [dlitvak](https://github.com/dlitvak/)).
-3. Devdatta Gangal ([Email](mailto:devdatta@fb.com), Github: [devdatta-work](https://github.com/devdatta-work/)).
+3. Devdatta Gangal ([Email](mailto:devdatta@gmail.com), Github: [devdatta-work](https://github.com/devdatta-work/)).
 4. Reheman Baikejiang ([Email](mailto:bakikjan@gmail.com), Github: [bakijan](https://github.com/bakijan/)).
 5. Devunuri Sai Praneeth ([Email](mailto:devunurisaipraneeth@gmail.com), Github: [saipraneethd](https://github.com/saipraneethd)).
 
@@ -41,7 +41,7 @@ We follow the architecture as prescribed in the class instructions. The project 
 * The best results are obtained by *native* installation of ROS on a host machine. We cannot stress this fact enough, but beware of multitude issues if you go with other options. Native installation on a machine with pwoerful GPU is fast enough for live perception and is not affected by latency issues between Simulator & ROS (see below).
 * Workspace provided by Udacity (Alternative Running Environment) - see project notes.
 * VM & Simulator Installation (Alternative Running Environment)
-    - Udacity provided [virtual machine](https://s3-us-west-1.amazonaws.com/udacity-selfdrivingcar/Udacity_VM_Base_V1.0.0.zip) with ROS (Kinetic - 1.12.14) and Dataspeed DBW already installed - settings at 2CPU, 2GB system memory and 25GB free space. 
+    - Udacity provided [virtual machine](https://s3-us-west-1.amazonaws.com/udacity-selfdrivingcar/Udacity_VM_Base_V1.0.0.zip) with ROS (Kinetic - 1.12.14) and Dataspeed DBW already installed - settings at 2CPU, 2GB system memory and 25GB free space.
     - Simulator Downloaded the [Udacity Simulator](https://github.com/udacity/CarND-Capstone/releases)] on the client machine.  It works best in the "simple" version at 640 x 480
     - Setup port forwarding described [here](https://s3-us-west-1.amazonaws.com/udacity-selfdrivingcar/files/Port+Forwarding.pdf).                                
 * Docker (Alternative Running Environment)
@@ -84,10 +84,10 @@ At the time of submission, we used other team's bag, b/c Udacity's bag only prov
 ## Traffic Light Classification (TLC) with Single Shot Multibox Detector (SSD)
 
 _Disclaimer: Due to limited time and GPU resources, we borrowed a fully trained [model](https://github.com/alex-lechner/Traffic-Light-Classification/tree/master/models)
- from another team. We skipped the data generation and labeling by borrowing the group's TFRecord files 
- [link](https://github.com/alex-lechner/Traffic-Light-Classification/blob/master/README.md#1-the-lazy-approach).  We have also learned how to 
+ from another team. We skipped the data generation and labeling by borrowing the group's TFRecord files
+ [link](https://github.com/alex-lechner/Traffic-Light-Classification/blob/master/README.md#1-the-lazy-approach).  We have also learned how to
 train a model using [Object Detection Model Zoo](https://github.com/tensorflow/models/blob/r1.5/research/object_detection/g3doc/detection_model_zoo.md)
-from the same group's [tutorial](https://github.com/alex-lechner/Traffic-Light-Classification/blob/master/README.md), 
+from the same group's [tutorial](https://github.com/alex-lechner/Traffic-Light-Classification/blob/master/README.md),
 for which we are very grateful._
 
 ### TLC Intro
@@ -97,37 +97,37 @@ Carla autonomous driving vehicle in the real Udacity parking lot.
 
 ### TLC Implementation
 
-After a quick Google search and reviewing the Object Detection Lab in the Udacity lectures, we realized that 
-we would not have to train our model from scratch.  There's already a large library of object detection models hosted by 
+After a quick Google search and reviewing the Object Detection Lab in the Udacity lectures, we realized that
+we would not have to train our model from scratch.  There's already a large library of object detection models hosted by
 Tensorflow and contributed by Google [link](https://github.com/tensorflow/models/tree/r1.5/research/object_detection).
 We chose SSD model based on the report by Alex Lechner group that this was the optimal model for them.
 
-**Figure:  SSD Model** 
+**Figure:  SSD Model**
 ![SSD Model](imgs/SSD_model.jpg)
 
 SSD is end-to-end model [ref](https://arxiv.org/pdf/1512.02325.pdf), meaning it is trained to detect and classify an object in the picture
 at the same time.  SSD is a CNN built on the base of VGG16. It accepts images of any size and uses kernels to scan them for features at different
-levels of detail.  SSD gradually shrinks the feature map size and increase the depth as it goes to the deeper layers. 
-The deep layers cover larger receptive fields and construct more abstract representation, while the shallow layers cover 
+levels of detail.  SSD gradually shrinks the feature map size and increase the depth as it goes to the deeper layers.
+The deep layers cover larger receptive fields and construct more abstract representation, while the shallow layers cover
 smaller receptive fields.  SSD uses shallow layers to predict small/further objects and deeper layers to predict big objects.
 As can be seen in the diagram above, the result of these predictions at different levels are a bunch of bounding boxes.
 The boxes are combined around the object into a single bounding box which is output together with the object classification.
 
-**Figure:  SSD Feature Layer Boxes** 
+**Figure:  SSD Feature Layer Boxes**
 ![SSD Model](imgs/SSD_model_boxes.jpg)
 
-We decided to adopt another group's ([model](https://github.com/alex-lechner/Traffic-Light-Classification/tree/master/models)) 
+We decided to adopt another group's ([model](https://github.com/alex-lechner/Traffic-Light-Classification/tree/master/models))
 just to try the whole pipeline together.  As we found out, that model turned out to be too slow in a simulator working on CPU.
-It took 1-1.5 second to classify a single image posted to _/image_color_ topic.  Because the Udacity skeleton code was calling the TLClassifier 
+It took 1-1.5 second to classify a single image posted to _/image_color_ topic.  Because the Udacity skeleton code was calling the TLClassifier
 for every image, TLDetector thread was lagging behind trying to post every light detection to _/traffic_waypoint_ topic.
 To deal with this issue, we introduced *tl_detector_rate* and *tl_start_detection_distance* properties in [yaml config](ros/src/tl_detector/sim_traffic_light_config.yaml).
 *tl_detector_rate* sets number of times per second the images are classified (at least 3 detections have to happen to publish to _/traffic_waypoint_ topic).
-*tl_start_detection_distance* sets the distance before the next published traffic light stop line at which the classifier is getting invoked. 
+*tl_start_detection_distance* sets the distance before the next published traffic light stop line at which the classifier is getting invoked.
 It might be a bit tricky to pick a good set of parameters based on the host machine CPU speed.  We have not implemented the code to do this based on the system properties.
 Those parameters are less important when running on a powerful GPU; though, it might be a good idea to adjust them to save some cycles.
 For e.g., the default *tl_start_detection_distance* of 100 m. means that TLClassifier works all the time in the parking lot.
 
-We have spent some time researching our own model to train as well.  Looking at the 
+We have spent some time researching our own model to train as well.  Looking at the
 [Model Zoo]((https://github.com/tensorflow/models/blob/r1.5/research/object_detection/g3doc/detection_model_zoo.md)), we noticed
 the mobilenet as the next best model.
 
@@ -147,7 +147,7 @@ Running out of time we settled on using Alex Lechner group's model.  You can fin
 
 ### Insights on other things
 * Traffic Light detector
-We used a borrowed trained Single Shot Detector model for the detector/classifier (see above). 
+We used a borrowed trained Single Shot Detector model for the detector/classifier (see above).
 * Twist Controller
 We followed the project review notes precisely. The project reivew notes provide full implementation of the node which we reproduced in this submission with some edits.
 * Waypoint Loader

@@ -3,11 +3,11 @@
 <img src="udacity_selfdriving.jpg" alt="Udacity Self Driving Car" width="640" height="480">
 
 ### Team Members
-1. Sergiy Fefilatyev - Team Lead (Github: [sfefilatyev](https://github.com/sfefilatyev/))
-2. Dmitriy Litvak (Github: [dlitvak](https://github.com/dlitvak/))
-3. Devdatta Gangal (Github: [devdatta-work](https://github.com/devdatta-work/))
-4. Reheman Baikejiang (Github: [bakijan](https://github.com/bakijan/))
-5. Devunuri Sai Praneeth (Github: [saipraneethd](https://github.com/saipraneethd))
+1. Sergiy Fefilatyev - Team Lead ([Email](mailto:sfefilatyev@gmail.com), Github: [sfefilatyev](https://github.com/sfefilatyev/)).
+2. Dmitriy Litvak ([Email](mailto:dmit.litvak@gmail.com), Github: [dlitvak](https://github.com/dlitvak/)).
+3. Devdatta Gangal ([Email](mailto:devdatta@fb.com), Github: [devdatta-work](https://github.com/devdatta-work/)).
+4. Reheman Baikejiang ([Email](mailto:bakikjan@gmail.com), Github: [bakijan](https://github.com/bakijan/)).
+5. Devunuri Sai Praneeth ([Email](mailto:devunurisaipraneeth@gmail.com), Github: [saipraneethd](https://github.com/saipraneethd)).
 
 ### Goal
 The [rubric](https://review.udacity.com/#!/rubrics/1140/view) of the Capstone project is quite straightforward - did the car navigate the track successfully? The submitted code must work successfully to navigate Carla around the test track.

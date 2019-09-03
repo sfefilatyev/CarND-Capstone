@@ -10,7 +10,7 @@
 5. Devunuri Sai Praneeth (Github: [saipraneethd](https://github.com/saipraneethd))
 
 ### Goal
-The ![rubric](https://review.udacity.com/#!/rubrics/1140/view) of the Capstone project is quite straightforward - did the car navigate the track successfully? The submitted code must work successfully to navigate Carla around the test track.
+The [rubric](https://review.udacity.com/#!/rubrics/1140/view) of the Capstone project is quite straightforward - did the car navigate the track successfully? The submitted code must work successfully to navigate Carla around the test track.
 
 ### Architecture
 
@@ -24,26 +24,26 @@ We follow the architecture as prescribed in the class instructions. The project 
  - `waypoint_updater` adapts the car's route to the situation (eg. traffic light)
 
 ### Results
-1. Runs successfully on the Highway (Simulator). See full video results ![here](https://youtu.be/vRL9Pzjr3hE).
+1. Runs successfully on the Highway (Simulator). See full video results [here](https://youtu.be/vRL9Pzjr3hE).
 ![](highway.gif)
 
-2. Runs successfully on the Test Lot (Simulator). See video results ![here](https://www.youtube.com/watch?v=EGPor9flvVA)
+2. Runs successfully on the Test Lot (Simulator). See video results [here](https://www.youtube.com/watch?v=EGPor9flvVA)
 ![](test_lot.gif)
 
-3. Traffic light recognition runs successfully in ROS Bag replay from Carla. See full video demo ![here](https://www.youtube.com/watch?v=g7SMkP_P3LU). At the time of submission we tested our software on a bag with all recorded sensors from ![here](https://drive.google.com/uc?id=0B2_h37bMVw3iT0ZEdlF4N01QbHc&export=download). This bag belonged to ![another team](https://darienmt.com/CarND-Capstone/).
+3. Traffic light recognition runs successfully in ROS Bag replay from Carla. See full video demo [here](https://www.youtube.com/watch?v=g7SMkP_P3LU). At the time of submission we tested our software on a bag with all recorded sensors from [here](https://drive.google.com/uc?id=0B2_h37bMVw3iT0ZEdlF4N01QbHc&export=download). This bag belonged to [another team](https://darienmt.com/CarND-Capstone/).
 
 ![](Ros-bag.gif)
 
 
 ### Installation instructions
-* Clone project from from ![https://github.com/sfefilatyev/CarND-Capstone](https://github.com/sfefilatyev/CarND-Capstone)
-* Download and use the ![simulator](https://github.com/udacity/CarND-Capstone/releases) provided by Udacity.
+* Clone project from from [https://github.com/sfefilatyev/CarND-Capstone](https://github.com/sfefilatyev/CarND-Capstone)
+* Download and use the [simulator](https://github.com/udacity/CarND-Capstone/releases) provided by Udacity.
 * The best results are obtained by *native* installation of ROS on a host machine. We cannot stress this fact enough, but beware of multitude issues if you go with other options. Native installation on a machine with pwoerful GPU is fast enough for live perception and is not affected by latency issues between Simulator & ROS (see below).
 * Workspace provided by Udacity (Alternative Running Environment) - see project notes.
 * VM & Simulator Installation (Alternative Running Environment)
-    - Udacity provided ![virtual machine](https://s3-us-west-1.amazonaws.com/udacity-selfdrivingcar/Udacity_VM_Base_V1.0.0.zip) with ROS (Kinetic - 1.12.14) and Dataspeed DBW already installed - settings at 2CPU, 2GB system memory and 25GB free space. 
+    - Udacity provided [virtual machine](https://s3-us-west-1.amazonaws.com/udacity-selfdrivingcar/Udacity_VM_Base_V1.0.0.zip) with ROS (Kinetic - 1.12.14) and Dataspeed DBW already installed - settings at 2CPU, 2GB system memory and 25GB free space. 
     - Simulator Downloaded the [Udacity Simulator](https://github.com/udacity/CarND-Capstone/releases)] on the client machine.  It works best in the "simple" version at 640 x 480
-    - Setup port forwarding described ![here](https://s3-us-west-1.amazonaws.com/udacity-selfdrivingcar/files/Port+Forwarding.pdf).                                
+    - Setup port forwarding described [here](https://s3-us-west-1.amazonaws.com/udacity-selfdrivingcar/files/Port+Forwarding.pdf).                                
 * Docker (Alternative Running Environment)
     - [Install Docker](https://docs.docker.com/engine/installation/)
     - Build the docker container
@@ -63,7 +63,7 @@ While debugging camera topic we stumbled on a the following bug:
 [https://github.com/udacity/CarND-Capstone/issues/147](https://github.com/udacity/CarND-Capstone/issues/147) For Docker installation, we locally updated our requirements.txt with Pillow pointing to version 4.3 to address dependencies. This change is not part of the current submission due to strict guidance in this project for dependencies for Carla. We did not have to do such a change for Workspace engironment, VM, or native installation.
 
 * Real world testing
-At the time of submission, we used other team's bag, b/c Udacity's bag only provided training data, but not the messages. We downloaded a bag from ![here](https://drive.google.com/uc?id=0B2_h37bMVw3iT0ZEdlF4N01QbHc&export=download). tu
+At the time of submission, we used other team's bag, b/c Udacity's bag only provided training data, but not the messages. We downloaded a bag from [here](https://drive.google.com/uc?id=0B2_h37bMVw3iT0ZEdlF4N01QbHc&export=download) that belonged to [another team](https://darienmt.com/CarND-Capstone/).
 
 
 ### Other Issues we ran into
@@ -77,8 +77,8 @@ At the time of submission, we used other team's bag, b/c Udacity's bag only prov
     - We worked on many different solutions only to realize later that this behavior is consistent with physics.  
     - The first thing we changed was to tolerate higher deceleration (now changed to 5m/s*s which is 0.5G significantly less than 2G which is considered hard braking in industry)
     - Second thing we explore was to increase the lookahead from 50 waypoints to 100
-3. We also stumbled upon the “SteeringReport” issue [https://knowledge.udacity.com/questions/46645](https://knowledge.udacity.com/questions/46645). The current install of DBW breaks because the steering_wheel_angle_cmd d field, which is populated in bridge.py no longer exists, and we had to update locally code in Bridge-node to address issue described in ![https://github.com/udacity/CarND-Capstone/issues/306](https://github.com/udacity/CarND-Capstone/issues/306). This results in field steering_wheel_angle_cmd changed to steering_wheel_angle inside SteeringReport structure.
-4. We also observed Latency between ROS & simulator when camera is turned on. This issue has been reported multiple times, but seems to be unaddressed by Udacity. The issue is well described in ![https://github.com/udacity/CarND-Capstone/issues/266](https://github.com/udacity/CarND-Capstone/issues/266). The issue affects both, provided Workspace and Docker environment. It did not seem to affect the virtual machine environment. It did not affect native installation.
+3. We also stumbled upon the “SteeringReport” issue [https://knowledge.udacity.com/questions/46645](https://knowledge.udacity.com/questions/46645). The current install of DBW breaks because the steering_wheel_angle_cmd d field, which is populated in bridge.py no longer exists, and we had to update locally code in Bridge-node to address issue described in [https://github.com/udacity/CarND-Capstone/issues/306](https://github.com/udacity/CarND-Capstone/issues/306). This results in field steering_wheel_angle_cmd changed to steering_wheel_angle inside SteeringReport structure.
+4. We also observed Latency between ROS & simulator when camera is turned on. This issue has been reported multiple times, but seems to be unaddressed by Udacity. The issue is well described in [https://github.com/udacity/CarND-Capstone/issues/266](https://github.com/udacity/CarND-Capstone/issues/266). The issue affects both, provided Workspace and Docker environment. It did not seem to affect the virtual machine environment. It did not affect native installation.
 
 
 ## Traffic Light Classification (TLC) with Single Shot Multibox Detector (SSD)
@@ -158,7 +158,7 @@ Again, We followed the project review instructions precisely on this topic. The 
 
 ### Other instructions
 * Real world testing instructions
-1. Download [testing bag](https://drive.google.com/uc?id=0B2_h37bMVw3iT0ZEdlF4N01QbHc&export=download) that was recorded by Udacity for ![another team](https://darienmt.com/CarND-Capstone/) - At the time fo submission we used their test data.
+1. Download [testing bag](https://drive.google.com/uc?id=0B2_h37bMVw3iT0ZEdlF4N01QbHc&export=download) that was recorded by Udacity for [another team](https://darienmt.com/CarND-Capstone/) - At the time fo submission we used their test data.
 2. Unzip the file
 ```bash
 unzip traffic_light_bag_file.zip

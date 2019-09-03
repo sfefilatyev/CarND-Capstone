@@ -1,13 +1,13 @@
-# Udacity Self-Driving Car Engineer Nanodegree
+# Udacity Self-driving Car Nanodegree - System Integration
 
-<img src="udacity_selfdriving.jpg" alt="Udacity Self Driving Car" width="640" height="480">
+<img src="Readme_Car.png" alt="Udacity" width="490" height="338">
 
 ### Team Members
 1. Sergiy Fefilatyev (Github: [sfefilatyev](https://github.com/sfefilatyev/))
 2. Dmitriy Litvak (Github: [dlitvak](https://github.com/dlitvak/))
 3. Devdatta Gangal (Github: [devdatta-work](https://github.com/devdatta-work/))
 4. Reheman Baikejiang (Github: [bakijan](https://github.com/bakijan/))
-5. Devunuri Sai Praneeth (Github: []](https://github.com/))
+5. Devunuri Sai Praneeth (Github: [saipraneethd](https://github.com/saipraneethd))
 
 ### Goal
 The rubrik of the Capstone project is quite straightforward - did the car navigate the track successfully? The submitted code must work successfully to navigate Carla around the test track.
@@ -37,7 +37,7 @@ Video Insert
 
 ### Installation instructions
 * VM & Simulator Installation
-1. We use the Udacity provided virtual machine with ROS and Dataspeed DBW already installed - settings at 2CPU, 2GB system memory and 25GB free space
+1. We use the Udacity provided virtual machine with ROS (Kinetic - 1.12.14) and Dataspeed DBW already installed - settings at 2CPU, 2GB system memory and 25GB free space
 2. Simulator Downloaded the [Udacity Simulator[(https://github.com/udacity/CarND-Capstone/releases)] on the client machine.  It works best in the "simple" version at 640 x 480
 
 
@@ -54,15 +54,15 @@ See below
 
 ### Other Issues we ran into
 1. Requirements.txt was modified to point pillow to version 4.3 (see above).  We had an issue with cv.Bridge that was traced back to https://github.com/udacity/CarND-Capstone/issues/147.  This required upgrade to pillow version 4.3
-- We do want to call out that while you mention not to change the requirements.txt, you have used different kinds of settings yourself in the Virtual Workspace
-- This has caused a lot of confusion and wasted time
+  1. We do want to call out that while you mention not to change the requirements.txt, you have used different kinds of settings yourself in the Virtual Workspace
+  2. This has caused a lot of confusion and wasted time
 2. Need to mention obstacles were envisioned in the beginning with some stub code provided, but never actually finished in the project.
-3. We ran into issues with the car’s deceleration.  We observed crazy jerk after detection of the stop-light.  Seeking inspiration from  https://github.com/justinlee007/CarND-Capstone we adjusted the waypoints to ensure that the velocity was under the maximum possible velocity as given by v2=2aS where a = deceleration and S = distance until the stop-line.
-- The maximum deceleration chosen was 0.5m/s2 initially.
-- The issue still persisted because the car now had a discrete drop in velocity for the first waypoint where correction needs to happen
-- We worked on many different solutions only to realize later that this behavior is consistent with physics.  
-- The first thing we changed was to tolerate higher deceleration (now changed to 5m/s2 which is 0.5G significantly less than 2G which is considered hard braking in industry)
-- Second thing was to increase the lookahead from 50 waypoints to 100
+3. We ran into issues with the car’s deceleration.  We observed crazy jerk after detection of the stop-light.  Seeking inspiration from  https://github.com/justinlee007/CarND-Capstone we adjusted the waypoints to ensure that the velocity was under the maximum possible velocity as given by v*v=2aS where a = deceleration and S = distance until the stop-line.
+  1. The maximum deceleration chosen was 0.5m/s*s initially.
+  2. The issue still persisted because the car now had a discrete drop in velocity for the first waypoint where correction needs to happen
+  3. We worked on many different solutions only to realize later that this behavior is consistent with physics.  
+  4. The first thing we changed was to tolerate higher deceleration (now changed to 5m/s*s which is 0.5G significantly less than 2G which is considered hard braking in industry)
+  5. Second thing we explore was to increase the lookahead from 50 waypoints to 100
 4. We also stumbled upon the “SteeringReport” issue (https://knowledge.udacity.com/questions/46645). The current install of DBW breaks because the steering_wheel_angle_cmd d field, which is populated in bridge.py no longer exists, and we had to update locally code in Bridge-node to address issue described in udacity/CarND-Capstone#296. This results in field steering_wheel_angle_cmd changed to steering_wheel_angle inside SteeringReport structure.
 
 

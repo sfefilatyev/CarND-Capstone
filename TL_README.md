@@ -27,12 +27,16 @@ The deep layers cover larger receptive fields and construct more abstract repres
 smaller receptive fields.  SSD uses shallow layers to predict small/further objects and deeper layers to predict big objects.
 As can be seen in the diagram above, the result of these predictions at different levels are a bunch of bounding boxes.
 The boxes are combined around the object into a single bounding box which is output together with the object classification.
+
 **Figure:  SSD Feature Layer Boxes** 
 ![SSD Model](imgs/SSD_model_boxes.jpg)
 
-We decided adopt another group's ([model](https://github.com/alex-lechner/Traffic-Light-Classification/tree/master/models)) 
+We decided to adopt another group's ([model](https://github.com/alex-lechner/Traffic-Light-Classification/tree/master/models)) 
 just to try the whole pipeline together.  As we found out, that model turned out to be too slow in a simulator working on CPU.
- 
+It took 1-1.5 second to classify a single image posted to _/image_color_ topic.  Because the Udacity skeleton code was calling the TLClassifier 
+for every image, TLDetector thread was lagging behind trying to post every light detection to _/traffic_waypoint_ topic.
+To deal with this issue, we introduced 
+Looking at the [Model Zoo]((https://github.com/tensorflow/models/blob/r1.5/research/object_detection/g3doc/detection_model_zoo.md))
 
 
 Due to the lack of time, we skipped the data generation and labeling by borrowing the group's TFRecord files 

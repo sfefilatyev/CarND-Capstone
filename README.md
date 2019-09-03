@@ -29,7 +29,8 @@ We follow the architecture as prescribed in the class instructions. The project 
 Video insert
 2. Runs successfully on the Test Lot (Simulator)
 ![](test_lot.gif)
-3. Carla drives successfully with our code
+3. Carla ROS Bag replay
+![](ros-bag.gif)
 Video Insert
 
 

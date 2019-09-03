@@ -18,7 +18,8 @@ Tensorflow and contributed by Google [link](https://github.com/tensorflow/models
 We chose SSD model based on the report by Alex Lechner group that this was the optimal model for them.
 
 **Figure:  SSD Model**
-![SSD Model](./imgs/SSD_model.jpg)
+
+![SSD Model](imgs/SSD_model.jpg)
 
 We decided adopt their ([model](https://github.com/alex-lechner/Traffic-Light-Classification/tree/master/models)) to put the whole
 pipeline together.  

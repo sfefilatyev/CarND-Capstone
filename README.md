@@ -26,12 +26,14 @@ We follow the architecture as prescribed in the class instructions. The project 
 ### Results
 1. Runs successfully on the Highway (Simulator)
 ![](highway.gif)
-Video insert
+
 2. Runs successfully on the Test Lot (Simulator)
 ![](test_lot.gif)
+
 3. Carla ROS Bag replay
+
 ![](Ros-bag.gif)
-Video Insert
+
 
 
 

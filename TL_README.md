@@ -1,4 +1,4 @@
-### Traffic Light Classification (TLC) with Single Shot Multibox Detector (SSD)
+## Traffic Light Classification (TLC) with Single Shot Multibox Detector (SSD)
 
 _Disclaimer: Due to limited time and GPU resources, we borrowed a fully trained model from another team 
 ([link](https://github.com/alex-lechner/Traffic-Light-Classification/tree/master/models)). We have also learned how to 
@@ -6,12 +6,12 @@ train a model using [Object Detection Model Zoo](https://github.com/tensorflow/m
 from the same groups [tutorial](https://github.com/alex-lechner/Traffic-Light-Classification/blob/master/README.md), 
 for which we are very grateful._
 
-## TLC Intro
+### TLC Intro
 
 The goal of TLC was to train a model for quick classification of the traffic lights in the simulator environment and in
 Carla autonomous driving vehicle in the real Udacity parking lot.
 
-## TLC Implementation
+### TLC Implementation
 
 After a quick Google search and reviewing the Object Detection Lab in the Udacity lectures, we realized that 
 we would not have to train our model from scratch.  There's already a large library of object detection models hosted by 

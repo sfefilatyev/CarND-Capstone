@@ -38,28 +38,29 @@ We follow the architecture as prescribed in the class instructions. The project 
 ### Installation instructions
 * Clone project from from ![https://github.com/sfefilatyev/CarND-Capstone](https://github.com/sfefilatyev/CarND-Capstone)
 * Download and use the ![simulator](https://github.com/udacity/CarND-Capstone/releases) provided by Udacity.
-* The best results are obtained by *native* installation of ROS on a host machine. We cannot stress more this fact, but beware of multitude issues if you go with other options.
+* The best results are obtained by *native* installation of ROS on a host machine. We cannot stress this fact enough, but beware of multitude issues if you go with other options. Native installation on a machine with pwoerful GPU is fast enough for live perception and is not affected by latency issues between Simulator & ROS (see below).
+* Workspace provided by Udacity (Alternative Running Environment) - see project notes.
 * VM & Simulator Installation (Alternative Running Environment)
     - Udacity provided ![virtual machine](https://s3-us-west-1.amazonaws.com/udacity-selfdrivingcar/Udacity_VM_Base_V1.0.0.zip) with ROS (Kinetic - 1.12.14) and Dataspeed DBW already installed - settings at 2CPU, 2GB system memory and 25GB free space. 
     - Simulator Downloaded the [Udacity Simulator](https://github.com/udacity/CarND-Capstone/releases)] on the client machine.  It works best in the "simple" version at 640 x 480
     - Setup port forwarding described ![here](https://s3-us-west-1.amazonaws.com/udacity-selfdrivingcar/files/Port+Forwarding.pdf).                                
-* Docker 
+* Docker (Alternative Running Environment)
     - [Install Docker](https://docs.docker.com/engine/installation/)
     - Build the docker container
 ```bash
-docker build . -t capstone
+        docker build . -t capstone
 ```
     - Run the docker file
 ```bash
-docker run -p 4567:4567 -v $PWD:/capstone -v /tmp/log:/root/.ros/ --rm -it capstone
+        docker run -p 4567:4567 -v $PWD:/capstone -v /tmp/log:/root/.ros/ --rm -it capstone
 ```
 
 * Port Forwarding
-We looked up the instructions from [the course (3. Getting Started) here](https://s3-us-west-1.amazonaws.com/udacity-selfdrivingcar/files/Port+Forwarding.pdf) for port information forwarding
+We used instructions from [the course (3. Getting Started) here](https://s3-us-west-1.amazonaws.com/udacity-selfdrivingcar/files/Port+Forwarding.pdf) for port information forwarding
 
 * Changes to the Requirements.txt
 While debugging camera topic we stumbled on a the following bug:
-https://github.com/udacity/CarND-Capstone/issues/147 For Docker installation, we locally updated our requirements.txt with Pillow pointing to version 4.3 to address dependencies. This change is not part of the current submission due to strict guidance in this project for dependencies for Carla. We did not have to do such a change for Workspace engironment, VM, or native installation.
+[https://github.com/udacity/CarND-Capstone/issues/147](https://github.com/udacity/CarND-Capstone/issues/147) For Docker installation, we locally updated our requirements.txt with Pillow pointing to version 4.3 to address dependencies. This change is not part of the current submission due to strict guidance in this project for dependencies for Carla. We did not have to do such a change for Workspace engironment, VM, or native installation.
 
 * Real world testing
 At the time of submission, we used other team's bag, b/c Udacity's bag only provided training data, but not the messages. We downloaded a bag from ![here](https://drive.google.com/uc?id=0B2_h37bMVw3iT0ZEdlF4N01QbHc&export=download). tu
@@ -146,15 +147,18 @@ Running out of time we settled on using Alex Lechner group's model.  You can fin
 
 ### Insights on other things
 * Traffic Light detector
+We used a borrowed trained Single Shot Detector model for the detector/classifier (see above). 
 * Twist Controller
-* Waypoint Follower
+We followed the project review notes precisely. The project reivew notes provide full implementation of the node which we reproduced in this submission with some edits.
 * Waypoint Loader
+We only were chaning the config `ros/src/waypoint_loader/launch/waypoint_loader.launch` to switch waypoints source between large test track and small parking lot.
 * Waypoint Updater
+Again, We followed the project review instructions precisely on this topic. The WayPoint Updater is subscribed to /base_waypoints, /current_pose, /traffic_waypoint and publishes modified waypoints to /final_waypoint. We selected the number of points to publish as 50.
 
 
 ### Other instructions
 * Real world testing instructions
-1. Download [training bag](https://s3-us-west-1.amazonaws.com/udacity-selfdrivingcar/traffic_light_bag_file.zip) that was recorded on the Udacity self-driving car.
+1. Download [testing bag](https://drive.google.com/uc?id=0B2_h37bMVw3iT0ZEdlF4N01QbHc&export=download) that was recorded by Udacity for ![another team](https://darienmt.com/CarND-Capstone/) - At the time fo submission we used their test data.
 2. Unzip the file
 ```bash
 unzip traffic_light_bag_file.zip

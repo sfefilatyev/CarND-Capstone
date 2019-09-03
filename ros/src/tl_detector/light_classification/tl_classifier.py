@@ -24,7 +24,10 @@ class TLClassifier(object):
         self.categoty_to_tl_map = {'1': TrafficLight.GREEN, '2': TrafficLight.RED, '3': TrafficLight.YELLOW, '4': TrafficLight.UNKNOWN}
         self.categoty_to_str_map = {'1': 'GREEN', '2': 'RED', '3': 'YELLOW', '4': 'UNKNOWN'}
         
-        self.sess = tensorflow.Session(graph=self.detection_graph)
+        config = tensorflow.ConfigProto()
+        config.gpu_options.allow_growth = True
+
+        self.sess = tensorflow.Session(graph=self.detection_graph, config=config)
         self.image_tensor = self.detection_graph.get_tensor_by_name('image_tensor:0')
         self.detect_boxes = self.detection_graph.get_tensor_by_name('detection_boxes:0')
         self.detect_scores = self.detection_graph.get_tensor_by_name('detection_scores:0')
@@ -62,13 +65,13 @@ class TLClassifier(object):
                 tl_col_str = self.categoty_to_str_map[cat_idx_str]
                 traff_light = self.categoty_to_tl_map[cat_idx_str]
 
-                rospy.logdebug('----------------------')
+        rospy.logdebug('----------------------')
 
-                rospy.loginfo('TLClassifier detected %s (score %s) light after %d msec', tl_col_str, str(detect_score), (t1 - t0) * 1000)
+        rospy.loginfo('TLClassifier detected %s (score %s) light after %d msec', tl_col_str, str(detect_score), (t1 - t0) * 1000)
 
-                rospy.logdebug('TLClassifier SCORES %s', str(scores[0]))
-                rospy.logdebug('TLClassifier CLASSES %s', str(classes[0]))
-                rospy.logdebug('----------------------')
+        rospy.logdebug('TLClassifier SCORES %s', str(scores[0]))
+        rospy.logdebug('TLClassifier CLASSES %s', str(classes[0]))
+        rospy.logdebug('----------------------')
 
         return traff_light
 

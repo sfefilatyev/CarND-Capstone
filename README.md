@@ -1,5 +1,7 @@
 # Udacity Self-driving Car Nanodegree - System Integration
 
+<img src="Readme_Car.png" alt="Udacity" width="490" height="338">
+
 ### Team Members
 1. Sergiy Fefilatyev (Github: [sfefilatyev](https://github.com/sfefilatyev/))
 2. Dmitriy Litvak (Github: [dlitvak](https://github.com/dlitvak/))
@@ -10,15 +12,26 @@
 ### Goal
 The rubrik of the Capstone project is quite straightforward - did the car navigate the track successfully? The submitted code must work successfully to navigate Carla around the test track.
 
-<img src="Readme_Car.png" alt="Udacity" width="490" height="338">
+### Architecture
+
+<img src="final-project-ros-graph-v2.png" alt="Architecture" width="490" height="338">
+
+We follow the architecture as prescribed in the class instructions. The project runs with [ROS](http://www.ros.org/) and is divided into the following modules :
+ - `tl_detector` uses the camera to detect the traffic lights' color
+ - `twist_controller` handles the control of the car
+ - `waypoint_follower` makes sure the car follow the trajectory
+ - `waypoint_loader` loads the route the car is going to follow
+ - `waypoint_updater` adapts the car's route to the situation (eg. traffic light)
 
 ### Results
 1. Runs successfully on the Highway (Simulator)
+![](highway.gif)
 Video insert
 2. Runs successfully on the Test Lot (Simulator)
+![](test_lot.gif)
+3. Carla drives successfully with our code
 Video Insert
-3. Runs successfully on the ROS bad replay
-Video Insert
+
 
 
 ### Installation instructions
@@ -54,16 +67,7 @@ See below
 6. We also observed Latency between ROS & simulator when camera is turned on. This issue has been reported multiple times, but seems to be unaddressed by Udacity. The issue is described in udacity/CarND-Capstone#266 . The issue affects both, provided Workspace and Docker environment. It did not seem to affect the virtual machine environment. It did not affect native installation.
 
 
-### Architecture
 
-<img src="final-project-ros-graph-v2.png" alt="Architecture" width="490" height="338">
-
-We follow the architecture as prescribed in the class instructions. The project runs with [ROS](http://www.ros.org/) and is divided into the following modules :
- - `tl_detector` uses the camera to detect the traffic lights' color
- - `twist_controller` handles the control of the car
- - `waypoint_follower` makes sure the car follow the trajectory
- - `waypoint_loader` loads the route the car is going to follow
- - `waypoint_updater` adapts the car's route to the situation (eg. traffic light)
 
 ### Insights on Traffic Light Classification (TLC) with Single Shot Multibox Detector (SSD)
 *Disclaimer: Due to limited time and GPU resources, we borrowed a fully trained model from another team. We have also learned how to train a model using [Object Detection Model Zoo](https://github.com/tensorflow/models/blob/r1.5/research/object_detection/g3doc/detection_model_zoo.md) from the same group's [tutorial](https://github.com/alex-lechner/Traffic-Light-Classification/blob/master/README.md), for which we are very grateful.*

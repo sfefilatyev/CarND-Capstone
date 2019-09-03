@@ -45,7 +45,6 @@ class WaypointUpdater(object):
         rospy.wait_for_message('/current_pose', PoseStamped)
         self.current_pose_sub = rospy.Subscriber('/current_pose', PoseStamped, self.pose_cb)
 
-        rospy.wait_for_message('/traffic_waypoint', Int32)
         self.traffic_waypoint_sub = rospy.Subscriber('/traffic_waypoint', Int32, self.traffic_cb)
 
         self.final_waypoints_pub = rospy.Publisher('final_waypoints', Lane, queue_size=1)

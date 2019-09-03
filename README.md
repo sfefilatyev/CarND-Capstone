@@ -30,7 +30,7 @@ Video insert
 2. Runs successfully on the Test Lot (Simulator)
 ![](test_lot.gif)
 3. Carla ROS Bag replay
-![](ros-bag.gif)
+![](Ros-bag.gif)
 Video Insert
 
 

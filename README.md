@@ -1,6 +1,6 @@
 # Udacity Self-driving Car Nanodegree - System Integration
 
-<img src="Readme_Car.png" alt="Udacity" width="490" height="338">
+<img src="udacity_selfdriving.jpg" alt="Udacity Self Driving Car" width="640" height="480">
 
 ### Team Members
 1. Sergiy Fefilatyev (Github: [sfefilatyev](https://github.com/sfefilatyev/))

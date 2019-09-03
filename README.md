@@ -1,3 +1,7 @@
+# Udacity Self-Driving Car Engineer Nanodegree
+
+<img src="udacity_selfdriving.jpg" alt="Udacity Self Driving Car" width="640" height="480">
+
 ### Team Members
 1. Sergiy Fefilatyev (Github: [sfefilatyev](https://github.com/sfefilatyev/))
 2. Dmitriy Litvak (Github: [dlitvak](https://github.com/dlitvak/))
@@ -8,13 +12,26 @@
 ### Goal
 The rubrik of the Capstone project is quite straightforward - did the car navigate the track successfully? The submitted code must work successfully to navigate Carla around the test track.
 
+### Architecture
+
+<img src="final-project-ros-graph-v2.png" alt="Architecture" width="490" height="338">
+
+We follow the architecture as prescribed in the class instructions. The project runs with [ROS](http://www.ros.org/) and is divided into the following modules :
+ - `tl_detector` uses the camera to detect the traffic lights' color
+ - `twist_controller` handles the control of the car
+ - `waypoint_follower` makes sure the car follow the trajectory
+ - `waypoint_loader` loads the route the car is going to follow
+ - `waypoint_updater` adapts the car's route to the situation (eg. traffic light)
+
 ### Results
-1. Carla drives successfully with our code
-Video Insert
-2. Runs successfully on the Highway (Simulator)
+1. Runs successfully on the Highway (Simulator)
+![](highway.gif)
 Video insert
-3. Runs successfully on the Test Lot (Simulator)
+2. Runs successfully on the Test Lot (Simulator)
+![](test_lot.gif)
+3. Carla drives successfully with our code
 Video Insert
+
 
 
 
@@ -34,8 +51,6 @@ https://github.com/udacity/CarND-Capstone/issues/147 We locally updated our requ
 * Real world testing (will be updated)
 See below
 
-* Suggestions
-I wish Virtual Workspace had internet access so that instead of uploading files it would be possible to clone a repo.
 
 ### Other Issues we ran into
 1. Requirements.txt was modified to point pillow to version 4.3 (see above).  We had an issue with cv.Bridge that was traced back to https://github.com/udacity/CarND-Capstone/issues/147.  This required upgrade to pillow version 4.3
@@ -51,16 +66,7 @@ I wish Virtual Workspace had internet access so that instead of uploading files 
 4. We also stumbled upon the “SteeringReport” issue (https://knowledge.udacity.com/questions/46645). The current install of DBW breaks because the steering_wheel_angle_cmd d field, which is populated in bridge.py no longer exists, and we had to update locally code in Bridge-node to address issue described in udacity/CarND-Capstone#296. This results in field steering_wheel_angle_cmd changed to steering_wheel_angle inside SteeringReport structure.
 
 
-### Architecture
 
-<img src="final-project-ros-graph-v2.png" alt="Architecture" width="490" height="338">
-
-We follow the architecture as prescribed in the class instructions. The project runs with [ROS](http://www.ros.org/) and is divided into the following modules :
- - `tl_detector` uses the camera to detect the traffic lights' color
- - `twist_controller` handles the control of the car
- - `waypoint_follower` makes sure the car follow the trajectory
- - `waypoint_loader` loads the route the car is going to follow
- - `waypoint_updater` adapts the car's route to the situation (eg. traffic light)
 
 ### Insights on what we built
 * Traffic Light detector
